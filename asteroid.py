@@ -10,13 +10,31 @@ from logger import log_event
 class Asteroid(CircleShape):
     def __init__(self, x, y, radius):
         super().__init__(x, y, radius)
+        self.rotation = 0
+
+    def polygon(self):
+        coords = []
+        edges = 5
+        for i in range(0, edges):
+            coords.append(
+                self.position
+                + pygame.Vector2(0, 1).rotate(self.rotation + i * (360 / edges))
+                * self.radius
+            )
+        return coords
 
     def draw(self, screen):
         # param: surface to draw on, color, center pos, radius, line width
-        pygame.draw.circle(screen, "white", self.position, self.radius, LINE_WIDTH)
+        pygame.draw.polygon(screen, "white", self.polygon(), LINE_WIDTH)
+
+    #    def rotate(self, dt):
+    #        rot_angle = 1
+    #        self.rotation += rot_angle * dt
 
     def update(self, dt):
         self.position += self.velocity * dt
+
+    #        self.position += pygame.Vector2(0.1).rotate(self.rotation + rot_angle) * dt
 
     def split(self):
         self.kill()
